@@ -18,6 +18,10 @@ public class BoardManager : MonoSingleton<BoardManager>
     private LevelData _currentLevelData;
     private List<CardController> _spawnedCards = new List<CardController>();
 
+    public int CurrentRows => _currentLevelData.Rows;
+    public int CurrentCols => _currentLevelData.Columns;
+    public List<CardController> SpawnedCards => _spawnedCards;
+
     public void InitializeBoard(LevelData levelData)
     {
         _currentLevelData = levelData;
@@ -25,6 +29,31 @@ public class BoardManager : MonoSingleton<BoardManager>
         ClearBoard();
         SetupGrid();
         SpawnCards();
+    }
+
+    public void LoadGame(GameSaveData savedData)
+    {
+        ClearBoard();
+
+        _currentLevelData.Rows = savedData.Rows;
+        _currentLevelData.Columns = savedData.Columns;
+        SetupGrid();
+
+        foreach (var state in savedData.CardStates)
+        {
+            CardController card = Instantiate(cardPrefab, gridContainer);
+
+            var cardData = cardPool.Find(x => x.ID == state.CardID);
+            card.Initialize(state.CardID, cardData.FrontSprite);
+
+            if (state.IsMatched)
+            {
+                card.MarkAsMatched();
+                card.InstantShowFront();
+            }
+
+            _spawnedCards.Add(card);
+        }
     }
 
     private void SetupGrid()

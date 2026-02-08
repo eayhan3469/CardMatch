@@ -27,6 +27,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void HandleGameStart()
     {
-        BoardManager.instance.InitializeBoard(levels[_currentLevel]);
+        GameSaveData savedData = SaveManager.Load();
+
+        if (savedData != null)
+            BoardManager.instance.LoadGame(savedData);
+        else
+            BoardManager.instance.InitializeBoard(levels[_currentLevel]);
     }
 }

@@ -80,6 +80,11 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
         HandleSelection();
     }
+
+    internal void InstantShowFront()
+    {
+        displayImage.sprite = frontSprite;
+    }
 }
 
 public enum CardState : byte

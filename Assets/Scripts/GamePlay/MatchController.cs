@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MatchController : MonoBehaviour
 {
@@ -35,12 +36,35 @@ public class MatchController : MonoBehaviour
         {
             first.MarkAsMatched();
             second.MarkAsMatched();
+            
+            CreateSavePoint();
         }
         else
         {
             first.Flip(false);
             second.Flip(false);
         }
+    }
+
+    public void CreateSavePoint()
+    {
+        GameSaveData data = new GameSaveData
+        {
+            Score = 0,
+            Rows = BoardManager.instance.CurrentRows,
+            Columns = BoardManager.instance.CurrentCols
+        };
+
+        foreach (var card in BoardManager.instance.SpawnedCards)
+        {
+            data.CardStates.Add(new CardSaveState
+            {
+                CardID = card.CardID,
+                IsMatched = card.State == CardState.Matched
+            });
+        }
+
+        SaveManager.Save(data);
     }
 
     private void OnDestroy()
