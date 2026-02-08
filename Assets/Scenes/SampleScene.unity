@@ -209,8 +209,9 @@ GameObject:
   - component: {fileID: 327468385}
   - component: {fileID: 327468386}
   - component: {fileID: 327468387}
+  - component: {fileID: 327468388}
   m_Layer: 5
-  m_Name: Board
+  m_Name: BoardManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -272,11 +273,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890ffb8db562a524b9d9fe59e637abb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPool:
+  - {fileID: 11400000, guid: d2a3a0e237a7fc04290ad3e92526d68c, type: 2}
+  - {fileID: 11400000, guid: 1a961b08a670a094096c1d12371a16ab, type: 2}
+  - {fileID: 11400000, guid: daabcf31f48d8714aa556404c972c88a, type: 2}
+  - {fileID: 11400000, guid: 4dad0e0b17782274cba6583a94fa1b51, type: 2}
+  - {fileID: 11400000, guid: 201267209005b56418296083e56708c5, type: 2}
+  - {fileID: 11400000, guid: ae75d79640a4a444f8cff8bd83943a28, type: 2}
+  - {fileID: 11400000, guid: d026ed7a5ef4b744e9008c5620ba4c8d, type: 2}
+  - {fileID: 11400000, guid: 48852b791e4b5da4fb75cd0257949b53, type: 2}
+  - {fileID: 11400000, guid: aa4e5275b1724104d920380a3b531fd7, type: 2}
   gridContainer: {fileID: 327468385}
   gridLayoutGroup: {fileID: 327468386}
   cardPrefab: {fileID: -3716133590426615161, guid: 5cca4d274aaf91641912d42516f40eca, type: 3}
   paddingPercentage: 0.05
   cardAspectRatio: 0.71
+--- !u!114 &327468388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327468384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa5b66c09e11dd48adfad78c064c00e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &464123868
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class BoardManager : MonoSingleton<BoardManager>
 {
     [Header("References")]
+    [SerializeField] private List<CardData> cardPool;
     [SerializeField] private RectTransform gridContainer;
     [SerializeField] private GridLayoutGroup gridLayoutGroup;
     [SerializeField] private CardController cardPrefab;
@@ -64,13 +65,34 @@ public class BoardManager : MonoSingleton<BoardManager>
     {
         int totalCards = _currentLevelData.Rows * _currentLevelData.Columns;
 
-        List<int> cardIDs = GenerateShuffledIDs(totalCards);
+        int pairsNeeded = totalCards / 2;
+        List<CardData> selectedData = new List<CardData>();
+
+        for (int i = 0; i < pairsNeeded; i++)
+        {
+            CardData data = cardPool[i % cardPool.Count];
+            selectedData.Add(data);
+            selectedData.Add(data);
+        }
+
+        ShuffleList(selectedData);
 
         for (int i = 0; i < totalCards; i++)
         {
             CardController card = Instantiate(cardPrefab, gridContainer);
-            //card.Initialize(cardIDs[i]);
+            card.Initialize(selectedData[i].ID, selectedData[i].FrontSprite);
             _spawnedCards.Add(card);
+        }
+    }
+
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
     }
 
@@ -78,27 +100,10 @@ public class BoardManager : MonoSingleton<BoardManager>
     {
         foreach (var card in _spawnedCards)
         {
-            if (card != null) Destroy(card.gameObject);
+            if (card != null)
+                Destroy(card.gameObject);
         }
+
         _spawnedCards.Clear();
-    }
-
-    private List<int> GenerateShuffledIDs(int total)
-    {
-        List<int> ids = new List<int>();
-        for (int i = 0; i < total / 2; i++)
-        {
-            ids.Add(i);
-            ids.Add(i);
-        }
-
-        for (int i = 0; i < ids.Count; i++)
-        {
-            int temp = ids[i];
-            int randomIndex = Random.Range(i, ids.Count);
-            ids[i] = ids[randomIndex];
-            ids[randomIndex] = temp;
-        }
-        return ids;
     }
 }
