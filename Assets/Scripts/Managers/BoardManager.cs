@@ -65,6 +65,9 @@ public class BoardManager : MonoSingleton<BoardManager>
     {
         int totalCards = _currentLevelData.Rows * _currentLevelData.Columns;
 
+        if (totalCards % 2 == 1)
+            totalCards--;
+
         int pairsNeeded = totalCards / 2;
         List<CardData> selectedData = new List<CardData>();
 

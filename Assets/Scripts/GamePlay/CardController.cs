@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -36,32 +35,33 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     private IEnumerator FlipRoutine(bool toFront, Action onComplete)
     {
         State = CardState.Flipping;
-
-        float duration = 0.2f;
+        float halfDuration = 0.1f;
         float elapsed = 0f;
 
         Quaternion startRotation = transform.rotation;
         Quaternion midRotation = Quaternion.Euler(0f, 90f, 0f);
         Quaternion endRotation = toFront ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.Euler(0f, 0f, 0f);
 
-        while (elapsed < duration)
+        // First Half: 0 -> 90 degree
+        while (elapsed < halfDuration)
         {
             elapsed += Time.deltaTime;
-            transform.rotation = Quaternion.Lerp(startRotation, midRotation, elapsed / (duration / 2));
+            transform.rotation = Quaternion.Slerp(startRotation, midRotation, elapsed / halfDuration);
             yield return null;
         }
 
         displayImage.sprite = toFront ? frontSprite : backSprite;
-
         elapsed = 0f;
 
-        while (elapsed < duration)
+        // Second Half: 90 -> 180/0 degree
+        while (elapsed < halfDuration)
         {
             elapsed += Time.deltaTime;
-            transform.rotation = Quaternion.Lerp(midRotation, endRotation, elapsed / (duration / 2));
+            transform.rotation = Quaternion.Slerp(midRotation, endRotation, elapsed / halfDuration);
             yield return null;
         }
 
+        transform.rotation = endRotation; 
         State = toFront ? CardState.Front : CardState.Back;
         onComplete?.Invoke();
     }

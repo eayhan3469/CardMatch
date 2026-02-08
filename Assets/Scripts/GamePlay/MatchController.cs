@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MatchController : MonoBehaviour
 {
-    private List<CardController> _activeCards = new List<CardController>();
+    private Queue<CardController> _selectionQueue = new Queue<CardController>();
 
     private void Start()
     {
@@ -13,21 +14,22 @@ public class MatchController : MonoBehaviour
 
     private void HandleCardClick(CardController card)
     {
-        _activeCards.Add(card);
-        card.Flip(true, () =>
+        card.Flip(true);
+        _selectionQueue.Enqueue(card);
+
+        if (_selectionQueue.Count >= 2)
         {
-            if (_activeCards.Count >= 2) 
-            {
-                CheckMatch();
-            }
-        });
+            CardController first = _selectionQueue.Dequeue();
+            CardController second = _selectionQueue.Dequeue();
+            StartCoroutine(ProcessMatchRoutine(first, second));
+        }
     }
 
-    private void CheckMatch()
+    private IEnumerator ProcessMatchRoutine(CardController first, CardController second)
     {
-        CardController first = _activeCards[0];
-        CardController second = _activeCards[1];
-        _activeCards.RemoveRange(0, 2);
+        yield return new WaitUntil(() => first.State == CardState.Front && second.State == CardState.Front);
+
+        yield return new WaitForSeconds(0.3f);
 
         if (first.CardID == second.CardID)
         {
@@ -39,5 +41,10 @@ public class MatchController : MonoBehaviour
             first.Flip(false);
             second.Flip(false);
         }
+    }
+
+    private void OnDestroy()
+    {
+        CardController.CardClicked -= HandleCardClick;
     }
 }
