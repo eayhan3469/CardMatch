@@ -1,10 +1,12 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    [SerializeField] private List<LevelData> levels;
+    [SerializeField] private int maxRowCount;
+    [SerializeField] private int minRowCount;
+    [SerializeField] private int maxColumnCount;
+    [SerializeField] private int minColumnCount;
 
     public static Action OnGameStarted;
 
@@ -30,8 +32,15 @@ public class GameManager : MonoSingleton<GameManager>
         GameSaveData savedData = SaveManager.Load();
 
         if (savedData != null)
+        {
             BoardManager.instance.LoadGame(savedData);
+        }
         else
-            BoardManager.instance.InitializeBoard(levels[_currentLevel]);
+        {
+            var rowCount = UnityEngine.Random.Range(minRowCount, maxRowCount);
+            var columnCount = UnityEngine.Random.Range(minColumnCount, maxColumnCount);
+
+            BoardManager.instance.InitializeBoard(rowCount, columnCount);
+        }
     }
 }

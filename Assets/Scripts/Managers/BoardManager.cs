@@ -15,16 +15,16 @@ public class BoardManager : MonoSingleton<BoardManager>
     [SerializeField] private float paddingPercentage = 0.05f;
     [SerializeField] private float cardAspectRatio = 0.75f;
 
-    private LevelData _currentLevelData;
     private List<CardController> _spawnedCards = new List<CardController>();
 
-    public int CurrentRows => _currentLevelData.Rows;
-    public int CurrentCols => _currentLevelData.Columns;
+    public int CurrentRows { get; private set; }
+    public int CurrentCols { get; private set; }
     public List<CardController> SpawnedCards => _spawnedCards;
 
-    public void InitializeBoard(LevelData levelData)
+    public void InitializeBoard(int rows, int cols)
     {
-        _currentLevelData = levelData;
+        CurrentRows = rows;
+        CurrentCols = cols;
 
         ClearBoard();
         SetupGrid();
@@ -35,8 +35,8 @@ public class BoardManager : MonoSingleton<BoardManager>
     {
         ClearBoard();
 
-        _currentLevelData.Rows = savedData.Rows;
-        _currentLevelData.Columns = savedData.Columns;
+        CurrentRows = savedData.Rows;
+        CurrentCols = savedData.Columns;
         SetupGrid();
 
         foreach (var state in savedData.CardStates)
@@ -61,14 +61,14 @@ public class BoardManager : MonoSingleton<BoardManager>
         float containerWidth = gridContainer.rect.width;
         float containerHeight = gridContainer.rect.height;
 
-        float totalSpacingX = gridLayoutGroup.spacing.x * (_currentLevelData.Columns - 1);
-        float totalSpacingY = gridLayoutGroup.spacing.y * (_currentLevelData.Rows - 1);
+        float totalSpacingX = gridLayoutGroup.spacing.x * (CurrentCols - 1);
+        float totalSpacingY = gridLayoutGroup.spacing.y * (CurrentRows - 1);
 
         float availableWidth = containerWidth - totalSpacingX;
         float availableHeight = containerHeight - totalSpacingY;
 
-        float maxCellW = availableWidth / _currentLevelData.Columns;
-        float maxCellH = availableHeight / _currentLevelData.Rows;
+        float maxCellW = availableWidth / CurrentCols;
+        float maxCellH = availableHeight / CurrentRows;
 
         float finalW, finalH;
 
@@ -87,12 +87,12 @@ public class BoardManager : MonoSingleton<BoardManager>
 
         gridLayoutGroup.cellSize = new Vector2(finalW, finalH);
         gridLayoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-        gridLayoutGroup.constraintCount = _currentLevelData.Columns;
+        gridLayoutGroup.constraintCount = CurrentCols;
     }
 
     private void SpawnCards()
     {
-        int totalCards = _currentLevelData.Rows * _currentLevelData.Columns;
+        int totalCards = CurrentRows * CurrentCols;
 
         if (totalCards % 2 == 1)
             totalCards--;
