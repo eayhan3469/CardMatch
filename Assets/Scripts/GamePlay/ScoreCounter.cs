@@ -22,7 +22,7 @@ public class ScoreCounter : MonoBehaviour
         GameManager.OnMatched += AddScore;
         GameManager.OnMismatch += HandleMismatch;
 
-        comboContainer.gameObject.SetActive(false);
+        comboContainer.SetActive(false);
     }
 
     private void OnDisable()
@@ -30,7 +30,7 @@ public class ScoreCounter : MonoBehaviour
         GameManager.OnMatched -= AddScore;
         GameManager.OnMismatch -= HandleMismatch;
 
-        comboContainer.gameObject.SetActive(false);
+        comboContainer.SetActive(false);
     }
 
     private void UpdateUI()
@@ -39,7 +39,7 @@ public class ScoreCounter : MonoBehaviour
         turnsText.text = _turn.ToString();
 
         comboText.text = string.Format("{0}x", _combo);
-        comboContainer.gameObject.SetActive(_combo > 0);
+        comboContainer.SetActive(_combo > 0);
     }
 
     private void HandleMismatch()
@@ -59,7 +59,7 @@ public class ScoreCounter : MonoBehaviour
     private void AddScore()
     {
         if (_combo > 0)
-            _score += _combo;
+            _score += (_combo + 1);
         else
             _score++;
 

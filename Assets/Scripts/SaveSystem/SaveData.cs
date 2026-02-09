@@ -18,6 +18,4 @@ public class CardSaveState
 {
     public int CardID;
     public bool IsMatched;
-
-    public int BoardIndex;
 }

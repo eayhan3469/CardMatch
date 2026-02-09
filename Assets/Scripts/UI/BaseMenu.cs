@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent (typeof(CanvasGroup))]
+[RequireComponent(typeof(CanvasGroup))]
 public class BaseMenu : MonoBehaviour, IMenu
 {
     [SerializeField] private MenuType _type;
@@ -8,7 +8,7 @@ public class BaseMenu : MonoBehaviour, IMenu
     public MenuType Type => _type;
 
     protected CanvasGroup CanvasGroup;
-    
+
     protected virtual void Awake()
     {
         CanvasGroup = GetComponent<CanvasGroup>();
@@ -16,6 +16,9 @@ public class BaseMenu : MonoBehaviour, IMenu
 
     public void Show()
     {
+        if (!EnsureCanvasGroup())
+            return;
+
         CanvasGroup.alpha = 1;
         CanvasGroup.blocksRaycasts = true;
         CanvasGroup.interactable = true;
@@ -24,9 +27,30 @@ public class BaseMenu : MonoBehaviour, IMenu
 
     public void Hide()
     {
+        if (!EnsureCanvasGroup())
+            return;
+
         CanvasGroup.alpha = 0;
         CanvasGroup.blocksRaycasts = false;
         CanvasGroup.interactable = false;
         gameObject.SetActive(false);
+    }
+
+    private bool EnsureCanvasGroup()
+    {
+        if (CanvasGroup != null)
+            return true;
+
+        CanvasGroup = GetComponent<CanvasGroup>();
+
+        if (CanvasGroup == null)
+        {
+            Debug.LogError($"CanvasGroup component not found on {gameObject.name}. " +
+                         "Please ensure it's attached or RequireComponent is working.", this);
+
+            return false;
+        }
+
+        return true;
     }
 }

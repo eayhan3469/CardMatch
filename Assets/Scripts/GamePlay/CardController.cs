@@ -10,6 +10,8 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Sprite backSprite;
     [SerializeField] private Sprite frontSprite;
 
+    [SerializeField] private float flipDuration = 0.2f;
+
     public static Action<CardController> CardClicked;
 
     public int CardID { get; private set; }
@@ -36,7 +38,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     private IEnumerator FlipRoutine(bool toFront, Action onComplete)
     {
         State = CardState.Flipping;
-        float halfDuration = 0.1f;
+        float halfDuration = flipDuration / 2f;
         float elapsed = 0f;
 
         Quaternion startRotation = transform.rotation;
@@ -71,7 +73,6 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     {
         State = CardState.Matched;
         displayImage.raycastTarget = false;
-        // TODO: Write matched process.
     }
 
     public void OnPointerClick(PointerEventData eventData)

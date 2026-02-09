@@ -19,7 +19,6 @@ public class MainMenu : BaseMenu
 
     public void OnContinueClicked()
     {
-        // TODO: Should add game loading system.
         UIManager.instance.ShowMenu(MenuType.Game);
         GameManager.OnGameContinued?.Invoke();
     }

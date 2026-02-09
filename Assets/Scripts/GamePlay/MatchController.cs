@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MatchController : MonoBehaviour
 {
+    [SerializeField] private float matchDelayDuration = 0.2f;
+
     private Queue<CardController> _selectionQueue = new Queue<CardController>();
 
     private void Start()
@@ -28,7 +30,7 @@ public class MatchController : MonoBehaviour
     {
         yield return new WaitUntil(() => first.State == CardState.Front && second.State == CardState.Front);
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(matchDelayDuration);
 
         if (first.CardID == second.CardID)
         {

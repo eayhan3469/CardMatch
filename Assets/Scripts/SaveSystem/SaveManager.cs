@@ -17,8 +17,16 @@ public static class SaveManager
         if (!File.Exists(SavePath))
             return null;
 
-        string json = File.ReadAllText(SavePath);
-        return JsonUtility.FromJson<GameSaveData>(json);
+        try
+        {
+            string json = File.ReadAllText(SavePath);
+            return JsonUtility.FromJson<GameSaveData>(json);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to load save: {e.Message}");
+            return null;
+        }
     }
 
     public static void DeleteSave()
