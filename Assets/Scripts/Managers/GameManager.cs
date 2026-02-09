@@ -71,6 +71,7 @@ public class GameManager : MonoSingleton<GameManager>
 
             ScoreCounter.SetScore(savedData.Score);
             ScoreCounter.SetTurn(savedData.TurnCount);
+            ScoreCounter.SetCombo(savedData.Combo);
         }
     }
 
@@ -91,6 +92,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             Score = ScoreCounter.Score,
             TurnCount = ScoreCounter.Turn,
+            Combo = ScoreCounter.Combo,
             Rows = BoardManager.instance.CurrentRows,
             Columns = BoardManager.instance.CurrentCols
         };

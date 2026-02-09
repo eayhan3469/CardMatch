@@ -8,6 +8,7 @@ public class GameSaveData
     public int Columns;
     public int Score;
     public int TurnCount;
+    public int Combo;
 
     public List<CardSaveState> CardStates = new List<CardSaveState>();
 }
