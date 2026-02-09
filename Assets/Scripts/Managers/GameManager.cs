@@ -74,6 +74,17 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+    public void CheckGameFinish()
+    {
+        int totalPairsNeeded = (BoardManager.instance.CurrentRows * BoardManager.instance.CurrentCols) / 2;
+
+        if (ScoreCounter.Score >= totalPairsNeeded)
+        {
+            OnGameEnded?.Invoke();
+            SaveManager.DeleteSave();
+        }
+    }
+
     public void CreateSavePoint()
     {
         GameSaveData data = new GameSaveData

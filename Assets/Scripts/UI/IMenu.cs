@@ -8,5 +8,6 @@ public interface IMenu
 public enum MenuType : byte
 {
     Main,
-    Game
+    Game,
+    EndGame
 }

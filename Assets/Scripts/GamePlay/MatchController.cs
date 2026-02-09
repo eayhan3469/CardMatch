@@ -37,6 +37,8 @@ public class MatchController : MonoBehaviour
 
             GameManager.OnMatched?.Invoke();
             GameManager.instance.CreateSavePoint();
+
+            GameManager.instance.CheckGameFinish();
         }
         else
         {
@@ -44,6 +46,7 @@ public class MatchController : MonoBehaviour
             second.Flip(false);
 
             GameManager.OnMismatch?.Invoke();
+            GameManager.instance.CreateSavePoint();
         }
     }
 
