@@ -9,6 +9,7 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] private int minColumnCount;
 
     public static Action OnGameStarted;
+    public static Action OnGameContinued;
     public static Action OnGameEnded;
 
     public static Action OnFlip;
@@ -18,14 +19,18 @@ public class GameManager : MonoSingleton<GameManager>
     private ScoreCounter _scoreCounter;
     private int _currentLevel;
 
+    public ScoreCounter ScoreCounter => _scoreCounter;
+
     private void OnEnable()
     {
         OnGameStarted += HandleGameStart;
+        OnGameContinued += HandleGameContinue;
     }
 
     private void OnDisable()
     {
         OnGameStarted -= HandleGameStart;
+        OnGameContinued -= HandleGameContinue;
     }
 
     private void Awake()
@@ -45,18 +50,49 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void HandleGameStart()
     {
+        var rowCount = UnityEngine.Random.Range(minRowCount, maxRowCount);
+        var columnCount = UnityEngine.Random.Range(minColumnCount, maxColumnCount);
+
+        BoardManager.instance.InitializeBoard(rowCount, columnCount);
+
+        ScoreCounter.SetScore(0);
+        ScoreCounter.SetTurn(0);
+
+        CreateSavePoint();
+    }
+
+    private void HandleGameContinue()
+    {
         GameSaveData savedData = SaveManager.Load();
 
         if (savedData != null)
         {
             BoardManager.instance.LoadGame(savedData);
-        }
-        else
-        {
-            var rowCount = UnityEngine.Random.Range(minRowCount, maxRowCount);
-            var columnCount = UnityEngine.Random.Range(minColumnCount, maxColumnCount);
 
-            BoardManager.instance.InitializeBoard(rowCount, columnCount);
+            ScoreCounter.SetScore(savedData.Score);
+            ScoreCounter.SetTurn(savedData.TurnCount);
         }
+    }
+
+    public void CreateSavePoint()
+    {
+        GameSaveData data = new GameSaveData
+        {
+            Score = ScoreCounter.Score,
+            TurnCount = ScoreCounter.Turn,
+            Rows = BoardManager.instance.CurrentRows,
+            Columns = BoardManager.instance.CurrentCols
+        };
+
+        foreach (var card in BoardManager.instance.SpawnedCards)
+        {
+            data.CardStates.Add(new CardSaveState
+            {
+                CardID = card.CardID,
+                IsMatched = card.State == CardState.Matched
+            });
+        }
+
+        SaveManager.Save(data);
     }
 }

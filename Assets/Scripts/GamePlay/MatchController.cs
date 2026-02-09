@@ -36,7 +36,7 @@ public class MatchController : MonoBehaviour
             second.MarkAsMatched();
 
             GameManager.OnMatched?.Invoke();
-            CreateSavePoint();
+            GameManager.instance.CreateSavePoint();
         }
         else
         {
@@ -45,27 +45,6 @@ public class MatchController : MonoBehaviour
 
             GameManager.OnMismatch?.Invoke();
         }
-    }
-
-    public void CreateSavePoint()
-    {
-        GameSaveData data = new GameSaveData
-        {
-            Score = 0,
-            Rows = BoardManager.instance.CurrentRows,
-            Columns = BoardManager.instance.CurrentCols
-        };
-
-        foreach (var card in BoardManager.instance.SpawnedCards)
-        {
-            data.CardStates.Add(new CardSaveState
-            {
-                CardID = card.CardID,
-                IsMatched = card.State == CardState.Matched
-            });
-        }
-
-        SaveManager.Save(data);
     }
 
     private void OnDestroy()

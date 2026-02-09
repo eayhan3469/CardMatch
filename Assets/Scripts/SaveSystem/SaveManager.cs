@@ -26,4 +26,9 @@ public static class SaveManager
         if (File.Exists(SavePath)) 
             File.Delete(SavePath);
     }
+
+    public static bool HasSave()
+    {
+        return File.Exists(SavePath);
+    }
 }
