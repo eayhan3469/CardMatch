@@ -30,6 +30,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     public void Flip(bool toFront, Action onComplete = null)
     {
         StartCoroutine(FlipRoutine(toFront, onComplete));
+        GameManager.OnFlip?.Invoke();
     }
 
     private IEnumerator FlipRoutine(bool toFront, Action onComplete)

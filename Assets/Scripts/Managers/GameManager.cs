@@ -9,13 +9,27 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] private int minColumnCount;
 
     public static Action OnGameStarted;
+    public static Action OnGameEnded;
 
+    public static Action OnFlip;
+    public static Action OnMatched;
+    public static Action OnMismatch;
+
+    private ScoreCounter _scoreCounter;
     private int _currentLevel;
+
+    private void OnEnable()
+    {
+        OnGameStarted += HandleGameStart;
+    }
+
+    private void OnDisable()
+    {
+        OnGameStarted -= HandleGameStart;
+    }
 
     private void Awake()
     {
-        OnGameStarted += HandleGameStart;
-
         if (!PlayerPrefs.HasKey("Level"))
         {
             _currentLevel = 0;
@@ -25,6 +39,8 @@ public class GameManager : MonoSingleton<GameManager>
         {
             _currentLevel = PlayerPrefs.GetInt("Level");
         }
+
+        _scoreCounter = FindAnyObjectByType<ScoreCounter>();
     }
 
     private void HandleGameStart()

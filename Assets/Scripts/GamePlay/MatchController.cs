@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MatchController : MonoBehaviour
 {
@@ -36,13 +34,16 @@ public class MatchController : MonoBehaviour
         {
             first.MarkAsMatched();
             second.MarkAsMatched();
-            
+
+            GameManager.OnMatched?.Invoke();
             CreateSavePoint();
         }
         else
         {
             first.Flip(false);
             second.Flip(false);
+
+            GameManager.OnMismatch?.Invoke();
         }
     }
 
